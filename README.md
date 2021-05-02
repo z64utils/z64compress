@@ -49,7 +49,7 @@ This is a command line application. Learn from these common examples and adapt t
     --out       compressed output rom
 
     --matching  attempt matching compression at the cost of
-	              some optimizations and reduced performance
+                some optimizations and reduced performance
 
     --mb        how many mb the compressed rom should be
 
