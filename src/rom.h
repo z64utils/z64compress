@@ -23,13 +23,13 @@ void rom_free(struct rom *rom);
 void rom_save(struct rom *rom, const char *fn);
 
 /* compress rom using specified algorithm */
-void rom_compress(struct rom *rom, int mb, int numThreads);
+void rom_compress(struct rom *rom, int mb, int numThreads, bool matching);
 
 /* specify start of dmadata and number of entries */
-void rom_dma(struct rom *rom, unsigned int offset, int num_entries);
+void rom_dma(struct rom *rom, unsigned int offset, int num_entries, bool matching);
 
 /* call this once dma settings are finalized */
-void rom_dma_ready(struct rom *rom);
+void rom_dma_ready(struct rom *rom, bool matching);
 
 /* set compression flag on indices start <= idx <= end */
 void
