@@ -1,4 +1,5 @@
 #include <ctype.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -155,6 +156,9 @@ static void usage(void)
 	fprintf(stderr, "\n");
 	fprintf(stderr, "    --out       compressed output rom\n");
 	fprintf(stderr, "\n");
+	fprintf(stderr, "    --matching  attempt matching compression at the cost of\n");
+	fprintf(stderr, "                some optimizations and reduced performance\n");
+	fprintf(stderr, "\n");
 	fprintf(stderr, "    --mb        how many mb the compressed rom should be\n");
 	fprintf(stderr, "\n");
 	fprintf(stderr, "    --codec     currently supported codecs\n");
@@ -196,6 +200,7 @@ wow_main
 	const char *Adma = 0;
 	const char *Acodec = 0;
 	const char *Acache = 0;
+	bool Amatching = false;
 	int Amb = 0;
 	int Athreads = 0;
 	wow_main_argv;
@@ -230,6 +235,13 @@ wow_main
 				die("--out arg provided more than once");
 			Aout = next;
 		}
+		else if (!strcmp(arg, "--matching"))
+		{
+			if (Amatching)
+				die("--matching arg provided more than once");
+			Amatching = true;
+			i--; // hack, this option has no arguments
+		}
 		else if (!strcmp(arg, "--cache"))
 		{
 			if (Acache)
@@ -260,7 +272,7 @@ wow_main
 			Adma = next;
 			if (sscanf(Adma, "%i,%i", &start, &num) != 2)
 				die("--dma bad formatting '%s'", Adma);
-			rom_dma(rom, start, num);
+			rom_dma(rom, start, num, Amatching);
 		}
 		else if (!strcmp(arg, "--mb"))
 		{
@@ -318,10 +330,10 @@ wow_main
 	#undef ARG_ZERO_TEST
 	
 	/* finished initializing dma settings */
-	rom_dma_ready(rom);
+	rom_dma_ready(rom, Amatching);
 	
 	/* compress rom */
-	rom_compress(rom, Amb, Athreads);
+	rom_compress(rom, Amb, Athreads, Amatching);
 	fprintf(stderr, "rom compressed successfully!\n");
 	
 	/* write compressed rom */
