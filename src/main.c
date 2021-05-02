@@ -157,7 +157,7 @@ static void usage(void)
 	fprintf(stderr, "    --out       compressed output rom\n");
 	fprintf(stderr, "\n");
 	fprintf(stderr, "    --matching  attempt matching compression at the cost of\n");
-	fprintf(stderr, "                optimizations and some performance drops\n");
+	fprintf(stderr, "                some optimizations and reduced performance\n");
 	fprintf(stderr, "\n");
 	fprintf(stderr, "    --mb        how many mb the compressed rom should be\n");
 	fprintf(stderr, "\n");

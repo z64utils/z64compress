@@ -48,6 +48,9 @@ This is a command line application. Learn from these common examples and adapt t
 
     --out       compressed output rom
 
+    --matching  attempt matching compression at the cost of
+	              some optimizations and reduced performance
+
     --mb        how many mb the compressed rom should be
 
     --codec     currently supported codecs
@@ -83,3 +86,4 @@ This is a command line application. Learn from these common examples and adapt t
 ## Building
 I have included shell scripts for building Linux and Windows binaries. Windows binaries are built using a cross compiler ([I recommend `MXE`](https://mxe.cc/)).
 
+Alternatively, a Makefile-based build system is provided. Choose the target platform with `make TARGET=linux64|linux32|win32`, default is linux64. If building for windows with a cross compiler, specify the compiler executable with `make TARGET=win32 CC=/path/to/executable`.
