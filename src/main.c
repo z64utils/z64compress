@@ -189,7 +189,8 @@ static void usage(void)
 	fprintf(printer, "    --threads      optional multithreading;\n");
 	fprintf(printer, "                   exclude this argument to disable it\n");
 	fprintf(printer, "\n");
-	fprintf(printer, "    --only-stdout  reserve printer for true errors\n");
+	fprintf(printer, "    --only-stdout  reserve stderr for errors and print\n");
+	fprintf(printer, "                   everything else to stdout\n");
 	fprintf(printer, "\n");
 	fprintf(printer, "  arguments are executed as they\n");
 	fprintf(printer, "  are parsed, so order matters!\n");
@@ -209,7 +210,7 @@ wow_main
 	bool Amatching = false;
 	bool Aonly_stdout = false;
 	wow_main_argv;
-	
+
 	printer = stderr;
 	for (int i = 1; i < argc; ++i)
 	{
