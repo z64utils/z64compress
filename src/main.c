@@ -356,7 +356,6 @@ wow_main
 	
 	ARG_ZERO_TEST(Ain   , "--in"   );
 	ARG_ZERO_TEST(Aout  , "--out"  );
-	ARG_ZERO_TEST(Amb   , "--mb"   );
 	ARG_ZERO_TEST(Acodec, "--codec");
 	
 	#undef ARG_ZERO_TEST
