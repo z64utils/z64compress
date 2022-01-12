@@ -28,6 +28,11 @@ zlibenc(
 	dst[6] = (src_sz >>  8);
 	dst[7] = (src_sz >>  0);
 	
+	/* zlib and gzip have different header lengths
+	 * https://stackoverflow.com/a/68538037
+	 */
+#if 1
+	#define HEADER_LEN 2
 	stream.avail_in = src_sz;
 	stream.next_in = src;
 	stream.avail_out = CAPACITY;
@@ -46,7 +51,36 @@ zlibenc(
 	deflateEnd(&stream);
 	
 	result_sz = CAPACITY - stream.avail_out;
+#else
+	/* this gzip code was left in for testing purposes; it may
+	 * be useful if matching ique recompression is ever revisited;
+	 * ique matches (except for one byte...) when compressed using
+	 * gzip 1.2.4 or 1.2.4a (they produce identical results),
+	 * available here: https://ftp.gnu.org/gnu/gzip/
+	 * this is not a compression error, because decompressing the
+	 * recompressed rom produces a rom identical to the original
+	 * decompressed ique rom;
+	 * TODO: find out why that byte doesn't match on recompression;
+	 * TODO: once that's working, add --codec ique for those wanting
+	 * matching ique recompression; otherwise, modern zlib works great!
+	 */
+	#define HEADER_LEN 10
+	FILE *fp = fopen("tmp.bin", "wb");
+	fwrite(src, 1, src_sz, fp);
+	fclose(fp);
+	system("./gzip -c -9 -n tmp.bin > tmp.bin.gzip");
+	fp = fopen("tmp.bin.gzip", "rb");
+	fseek(fp, 0, SEEK_END);
+	result_sz = ftell(fp);
+	fseek(fp, 0, SEEK_SET);
+	fread(dst, 1, result_sz, fp);
+	fclose(fp);
+#endif
 	*dst_sz = result_sz + g_hlen;
+	
+	/* trim zlib/gzip header */
+	memmove(dst + g_hlen, dst + g_hlen + HEADER_LEN, result_sz);
+	*dst_sz -= HEADER_LEN;
 	
 	return 0;
 	(void)_ctx; /* -Wunused-parameter */
