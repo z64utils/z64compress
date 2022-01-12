@@ -59,6 +59,7 @@ This is a command line application. Learn from these common examples and adapt t
                       yaz
                       ucl
                       lzo
+                      zlib
                       aplib
                  * to use non-yaz codecs, find patches
                    and code on my z64enc repo
