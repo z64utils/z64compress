@@ -1120,7 +1120,7 @@ void rom_compress(struct rom *rom, int mb, int numThreads, bool matching)
 		comp_total += sz16;
 		
 		if (mb != 0 && dma->Pend > compsz)
-			die("ran out of compressed rom space");
+			die("ran out of compressed rom space (try increasing --mb)");
 	}
 
 	/* adaptive final size */
