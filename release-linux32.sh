@@ -4,7 +4,7 @@ mkdir -p o
 mv *.o o
 
 # build everything else
-gcc -m32 -o z64compress -DNDEBUG src/*.c o/*.o -Wall -Wextra -s -Os -flto -lpthread -march=native -mtune=native
+gcc -m32 -o z64compress -DNDEBUG src/*.c o/*.o -Wall -Wextra -s -Os -flto -lpthread -lz -march=native -mtune=native
 
 # move to bin directory
 mkdir -p bin/linux32

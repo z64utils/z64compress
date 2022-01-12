@@ -462,6 +462,14 @@ static const struct encoder *encoder(const char *name)
 		
 		return &zx7;
 	}*/
+	else if (!strcmp(name, "zlib"))
+	{
+		static const struct encoder zlib = {
+			.encfunc = zlibenc
+		};
+		
+		return &zlib;
+	}
 	else if (!strcmp(name, "aplib"))
 	{
 		static const struct encoder aplib = {

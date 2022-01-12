@@ -167,6 +167,7 @@ static void usage(void)
 	fprintf(printer, "                      yaz\n");
 	fprintf(printer, "                      ucl\n");
 	fprintf(printer, "                      lzo\n");
+	fprintf(printer, "                      zlib\n");
 	fprintf(printer, "                      aplib\n");
 	fprintf(printer, "                 * to use non-yaz codecs, find patches\n");
 	fprintf(printer, "                   and code on my z64enc repo\n");
