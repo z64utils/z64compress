@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <zlib.h>
+#include "libdeflate/libdeflate.h"
 
 #define  CAPACITY  (1024 * 1024 * 4)  /* output buffer max (4 mb) */
 
@@ -16,8 +17,6 @@ zlibenc(
 {
 	unsigned char *src = _src;
 	unsigned char *dst = _dst;
-	z_stream stream = {0};
-	int r;
 	unsigned result_sz;
 	
 	extern int g_hlen; /* header length */
@@ -32,12 +31,15 @@ zlibenc(
 	 * https://stackoverflow.com/a/68538037
 	 */
 #if 1
-	#define HEADER_LEN 2
+	
+	#if 0 /* zlib */
+	z_stream stream = {0};
+	int r;
 	stream.avail_in = src_sz;
 	stream.next_in = src;
 	stream.avail_out = CAPACITY;
 	stream.next_out = dst + g_hlen;
-	
+	#define HEADER_LEN 2
 	if ((r = deflateInit(&stream, Z_BEST_COMPRESSION)) != Z_OK)
 	{
 		fprintf(stderr, "[!] fatal compression error %d\n", r);
@@ -51,6 +53,19 @@ zlibenc(
 	deflateEnd(&stream);
 	
 	result_sz = CAPACITY - stream.avail_out;
+	#else /* libdeflate */
+	#define HEADER_LEN 0
+	int level = 12;
+	struct libdeflate_compressor *compressor;
+	compressor = libdeflate_alloc_compressor(level);
+	result_sz = libdeflate_deflate_compress(
+		compressor
+		, src, src_sz
+		, dst + g_hlen
+		, CAPACITY
+	);
+	libdeflate_free_compressor(compressor);
+	#endif
 #else
 	/* this gzip code was left in for testing purposes; it may
 	 * be useful if matching ique recompression is ever revisited;
