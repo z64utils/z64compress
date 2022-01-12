@@ -20,8 +20,8 @@ zlibenc(
 	int r;
 	unsigned result_sz;
 	
-	int hlen = 8; /* header length */
-	memset(dst, 0, hlen);
+	extern int g_hlen; /* header length */
+	memset(dst, 0, g_hlen);
 	memcpy(dst, "ZLIB", 4);
 	dst[4] = (src_sz >> 24);
 	dst[5] = (src_sz >> 16);
@@ -31,7 +31,7 @@ zlibenc(
 	stream.avail_in = src_sz;
 	stream.next_in = src;
 	stream.avail_out = CAPACITY;
-	stream.next_out = dst + hlen;
+	stream.next_out = dst + g_hlen;
 	
 	if ((r = deflateInit(&stream, Z_BEST_COMPRESSION)) != Z_OK)
 	{
@@ -46,7 +46,7 @@ zlibenc(
 	deflateEnd(&stream);
 	
 	result_sz = CAPACITY - stream.avail_out;
-	*dst_sz = result_sz + hlen;
+	*dst_sz = result_sz + g_hlen;
 	
 	return 0;
 	(void)_ctx; /* -Wunused-parameter */

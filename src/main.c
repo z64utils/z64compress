@@ -8,6 +8,7 @@
 #include "rom.h"
 
 FILE* printer;
+int g_hlen = 8;
 
 static void compress(struct rom *rom, int start, int end)
 {
@@ -185,6 +186,8 @@ static void usage(void)
 	fprintf(printer, "\n");
 	fprintf(printer, "    --skip         disable compression on specified files\n");
 	fprintf(printer, "\n");
+	fprintf(printer, "    --headerless   don't write file headers (for iQue)\n");
+	fprintf(printer, "\n");
 	fprintf(printer, "    --repack       handles Majora's Mask archives\n");
 	fprintf(printer, "\n");
 	fprintf(printer, "    --threads      optional multithreading;\n");
@@ -210,6 +213,7 @@ wow_main
 	int Athreads = 0;
 	bool Amatching = false;
 	bool Aonly_stdout = false;
+	bool Aheaderless = false;
 	wow_main_argv;
 
 	printer = stderr;
@@ -251,6 +255,15 @@ wow_main
 			if (Amatching)
 				die("--matching arg provided more than once");
 			Amatching = true;
+			i--;
+			continue;
+		}
+		else if (!strcmp(arg, "--headerless"))
+		{
+			if (Aheaderless)
+				die("--headerless arg provided more than once");
+			Aheaderless = true;
+			g_hlen = 0;
 			i--;
 			continue;
 		}
