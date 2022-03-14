@@ -272,7 +272,11 @@ uint32_t encode(struct yazCtx *ctx, uint8_t *data, uint32_t data_size, uint8_t *
 	// block and stream differentiation
 	// Yay is block, Yaz is stream
 	int mode_block=1, mode_stream=1; // temporary, for testing
+#ifdef YAZ_MAIN_TEST
+	int g_hlen = 8;
+#else
 	extern int g_hlen;
+#endif
 	mode_block=!strcmp(mode,"Yay0");
 	if (g_hlen) {
 		memcpy(output, mode, 4);
