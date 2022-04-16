@@ -24,10 +24,12 @@ endif
 
 OBJ_DIR := o/$(TARGET)
 
-$(OBJ_DIR)/src/enc/%.o: CFLAGS := -DNDEBUG -s -Ofast -flto -Wall
+$(OBJ_DIR)/src/enc/%.o: CFLAGS := -DNDEBUG -s -Ofast -flto -Wall -Isrc/enc/libdeflate
 
 SRC_DIRS := $(shell find src -type d)
-C_FILES  := $(foreach dir,$(SRC_DIRS),$(wildcard $(dir)/*.c))
+C_DIRS   := $(shell find src -type d -not -path "src/enc/libdeflate/*")
+C_FILES  := $(foreach dir,$(C_DIRS),$(wildcard $(dir)/*.c))
+C_FILES  += src/enc/libdeflate/lib/deflate_compress.c src/enc/libdeflate/lib/utils.c
 O_FILES  := $(foreach f,$(C_FILES:.c=.o),$(OBJ_DIR)/$f)
 
 # Make build directories
