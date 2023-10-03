@@ -1028,6 +1028,9 @@ void rom_compress(struct rom *rom, int mb, int numThreads, bool matching)
 		strcpy(dot_codec, ".");
 		strcat(dot_codec, codec);
 		
+		/* make sure lz4hc/16kib -> lz4hc */
+		dot_codec[strcspn(dot_codec, "/")] = '\0';
+		
 		/* get list of all files in current working directory */
 		list = folder_new();
 	}
