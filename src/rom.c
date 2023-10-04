@@ -478,6 +478,8 @@ static const struct encoder *encoder(const char *name)
 			.encfunc = lz4hcenc
 		};
 		
+		// block-based approach
+		/*
 		extern int gLz4hcBlockSize;
 		if (sscanf(name + len, "/%d", &gLz4hcBlockSize) != 1)
 			die("lz4hc no block size defined: example: try 'lz4hc/16kib' for 16 kib");
@@ -485,6 +487,7 @@ static const struct encoder *encoder(const char *name)
 			die("lz4hc bad block size defined: use values 1 <= n <= 1024\n"
 				"(higher values have diminishing returns; 16 or 64 is plenty!)"
 			);
+		*/
 		
 		return &lz4hc;
 	}

@@ -5,6 +5,55 @@
 
 int gLz4hcBlockSize = 0;
 
+int
+lz4hcenc(
+	void *_src
+	, unsigned src_sz
+	, void *_dst
+	, unsigned *dst_sz
+	, void *_ctx
+)
+{
+	uint8_t *outStart = _dst;
+	uint8_t *outAt = outStart;
+	int compSz;
+	
+	// optional 'lz4hc' header
+	extern int g_hlen;
+	if (g_hlen != 0)
+	{
+		memcpy(outAt, "LZ4HC", 5);
+		outAt += 5;
+	}
+	else
+	{
+		outAt[0] = (src_sz >> 24);
+		outAt += 1;
+	}
+	
+	// 24-bit filesize
+	outAt[0] = (src_sz >> 16);
+	outAt[1] = (src_sz >>  8);
+	outAt[2] = (src_sz >>  0);
+	outAt += 3;
+	
+	if ((compSz = LZ4_compress_HC(
+			_src
+			, (void*)outAt
+			, src_sz
+			, 64 * 1024 * 1024
+			, LZ4HC_CLEVEL_MAX
+		)) <= 0
+	)
+		return 1;
+	
+	*dst_sz = compSz;
+	return 0;
+}
+
+// block-based approach
+/*
+
 #define MAX_BUFFER_SIZE (1024 * gLz4hcBlockSize)
 
 int
@@ -76,4 +125,5 @@ lz4hcenc(
 	
 	return 0;
 }
+*/
 
