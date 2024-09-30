@@ -926,6 +926,7 @@ void rom_compress(struct rom *rom, int mb, int numThreads, bool matching)
 	unsigned int largest_compress = 1024;
 	float total_compressed = 0;
 	float total_decompressed = 0;
+	const float toMib = 1.0 / (1024 * 1024);
 	struct compThread *compThread = 0;
 	int dma_num = rom->dma_num;
 	int i;
@@ -1118,14 +1119,19 @@ void rom_compress(struct rom *rom, int mb, int numThreads, bool matching)
 		else
 			dma->Pend = 0;
 		comp_total += sz16;
-		
-		if (mb != 0 && dma->Pend > compsz)
-			die("ran out of compressed rom space (try increasing --mb)");
 	}
 
 	/* adaptive final size */
 	if (mb == 0)
 		compsz = ALIGN8MB(comp_total);
+	else if (mb != 0 && comp_total > compsz)
+		die(
+			"ran out of compressed rom space\n"
+			"(have: %.2f mib, need: %.2f mib)\n"
+			"(0x%X bytes over limit)"
+			, compsz * toMib, comp_total * toMib
+			, comp_total - compsz
+		);
 	
 	if (matching)
 	{
